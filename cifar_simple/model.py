@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from prometheus.utils.factory import UtilsFactory
 from prometheus.dl.callbacks import (
     ClassificationLossCallback, LoggerCallback, OptimizerCallback,
-    CheckpointCallback, OneCycleLR, LRFinder, PrecisionCallback)
+    CheckpointCallback, OneCycleLR, PrecisionCallback)
 from prometheus.dl.runner import ClassificationRunner
 
 

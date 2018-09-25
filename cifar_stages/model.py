@@ -6,7 +6,7 @@ from prometheus.utils.factory import UtilsFactory
 from prometheus.dl.callbacks import (
     Callback,
     ClassificationLossCallback, LoggerCallback, OptimizerCallback,
-    CheckpointCallback, OneCycleLR, LRFinder, PrecisionCallback)
+    CheckpointCallback, OneCycleLR, PrecisionCallback)
 from prometheus.dl.runner import ClassificationRunner
 
 

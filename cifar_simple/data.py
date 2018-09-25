@@ -1,12 +1,7 @@
 import collections
-import cv2
-cv2.setNumThreads(0)
-cv2.ocl.setUseOpenCL(False)
-
 import torch
 import torchvision
 from torchvision import transforms
-
 from prometheus.dl.datasource import AbstractDataSource
 
 
