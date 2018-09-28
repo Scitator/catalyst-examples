@@ -16,8 +16,17 @@ Additional
 
 ### Preparation
 
-Get the [data](https://www.dropbox.com/s/9438wx9ku9ke1pt/ants_bees.tar.gz) 
-and unpack it to `data` folder.
+Get the [data](https://www.dropbox.com/s/9438wx9ku9ke1pt/ants_bees.tar.gz) (`wget https://www.dropbox.com/s/9438wx9ku9ke1pt/ants_bees.tar.gz`)
+and unpack it to `prometheus-examples/data` folder:
+```bash
+prometheus-examples/
+    data/
+        ants_bees/
+            ants/
+                ...
+            bees/
+                ...
+```
 
 Process the data
 ```bash
