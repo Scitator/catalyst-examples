@@ -106,3 +106,4 @@ venv.bak/
 .idea/
 data/
 logs/
+.DS_Store
