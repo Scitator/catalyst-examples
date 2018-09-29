@@ -38,8 +38,11 @@ PYTHONPATH=. python prometheus/scripts/tag2label.py \
 
 And `pip install tensorflow` for visualization.
 
-### Model training
+### Docker
 
+For more information about used docker images goto `prometheus/docker`.
+
+### Model training
 
 ```bash
 export LOGDIR=$(pwd)/logs/finetune/baseline
@@ -48,7 +51,7 @@ docker run -it --rm --shm-size 8G --runtime=nvidia \
    -e "CUDA_VISIBLE_DEVICES=0" \
    -e "PYTHONPATH=." \
    -e "LOGDIR=/logdir" \
-   bite-gpu bash finetune/run_model.sh
+   pro-gpu bash finetune/run_model.sh
 ```
 
 ### Tensorboard metrics visualization
@@ -56,7 +59,6 @@ docker run -it --rm --shm-size 8G --runtime=nvidia \
 For tensorboard support use 
 
 `tensorboard --logdir=./logs/finetune`
-
 
 ### Embeddings projecting
 
@@ -74,7 +76,7 @@ docker run -it --rm --shm-size 8G \
    -v $(pwd):/src/ -v $LOGDIR:/logdir/ \
    -e "PYTHONPATH=." \
    -e "LOGDIR=/logdir" \
-   bite-gpu bash finetune/run_index.sh
+   pro-gpu bash finetune/run_index.sh
 ```
 
 ### LrFinder example
@@ -86,7 +88,7 @@ docker run -it --rm --shm-size 8G --runtime=nvidia \
    -e "CUDA_VISIBLE_DEVICES=0" \
    -e "PYTHONPATH=." \
    -e "LOGDIR=/logdir" \
-   bite-gpu bash finetune/run_lrfinder.sh
+   pro-gpu bash finetune/run_lrfinder.sh
 tensorboard --logdir=./logs/finetune/lrfinder
 ```
 
@@ -99,6 +101,6 @@ docker run -it --rm --shm-size 8G --runtime=nvidia \
    -e "CUDA_VISIBLE_DEVICES=0" \
    -e "PYTHONPATH=." \
    -e "BASELOGDIR=/logdir" \
-   bite-gpu bash finetune/run_grid.sh
+   pro-gpu bash finetune/run_grid.sh
 tensorboard --logdir=./logs/finetune
 ```

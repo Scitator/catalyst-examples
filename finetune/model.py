@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 from prometheus.utils.factory import UtilsFactory
 from prometheus.dl.callbacks import (
-    Callback, LoggerCallback, OptimizerCallback,
+    Callback, LoggerCallback, OptimizerCallback, InferCallback,
     CheckpointCallback, OneCycleLR, LRFinder, PrecisionCallback)
 from prometheus.dl.runner import AbstractModelRunner
 from prometheus.models.resnet_encoder import ResnetEncoder
@@ -94,34 +94,6 @@ class LossCallback(Callback):
                 torch.norm(embeddings.float(), dim=1)) * self.emb_l2_reg
 
         state.loss = loss
-
-
-class InferCallback(Callback):
-    def __init__(self, out_prefix):
-        self.out_prefix = out_prefix
-        self.predictions = []
-
-    def on_loader_start(self, state):
-        self.predictions = []
-
-    def on_batch_end(self, state):
-        dct = state.output
-        dct = {
-            key: value.detach().cpu().numpy()
-            for key, value in dct.items()}
-        self.predictions.append(dct)
-
-    def on_loader_end(
-            self, state):
-        for key in self.predictions[0].keys():
-            predictions = [x[key] for x in self.predictions]
-            predictions = list(filter(
-                lambda x: x is not None, predictions))
-            predictions = np.concatenate(predictions, axis=0)
-            np.save(
-                self.out_prefix.format(
-                    suffix=".".join([state.loader_mode, key])),
-                predictions)
 
 
 # ---- Runner ----
