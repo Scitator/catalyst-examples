@@ -87,13 +87,13 @@ class LossCallback(Callback):
         embeddings = state.output["embeddings"]
         logits = state.output["logits"]
 
-        loss = state.criterion(logits.float(), state.input["target"].long())
+        loss = state.criterion(logits.float(), state.input["targets"].long())
 
         if self.emb_l2_reg > 0:
             loss += torch.mean(
                 torch.norm(embeddings.float(), dim=1)) * self.emb_l2_reg
 
-        state.loss = loss
+        state.loss["main"] = loss
 
 
 # ---- Runner ----

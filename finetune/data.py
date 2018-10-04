@@ -100,7 +100,7 @@ class DataSource(AbstractDataSource):
                 row_key="filepath", dict_key="image",
                 datapath=data_params.get("datapath", None)),
             ScalarReader(
-                row_key="class", dict_key="target",
+                row_key="class", dict_key="targets",
                 default_value=-1, dtype=np.int64)
         ]
         open_fn = ReaderCompose(readers=open_fn)
