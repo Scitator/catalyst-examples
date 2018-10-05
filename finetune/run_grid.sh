@@ -2,13 +2,13 @@
 set -e
 
 echo "Training...1"
-PYTHONPATH=. python prometheus/dl/scripts/train.py \
+PYTHONPATH=. python catalyst/dl/scripts/train.py \
     --model-dir=finetune \
     --config=finetune/train.yml \
     --baselogdir=${BASELOGDIR} --verbose
 
 echo "Training...2"
-PYTHONPATH=. python prometheus/dl/scripts/train.py \
+PYTHONPATH=. python catalyst/dl/scripts/train.py \
     --model-dir=finetune \
     --config=finetune/train.yml \
     --baselogdir=${BASELOGDIR} --verbose \
@@ -16,7 +16,7 @@ PYTHONPATH=. python prometheus/dl/scripts/train.py \
     --model_params/cls_net/hiddens=[512]:list
 
 echo "Training...3"
-PYTHONPATH=. python prometheus/dl/scripts/train.py \
+PYTHONPATH=. python catalyst/dl/scripts/train.py \
     --model-dir=finetune \
     --config=finetune/train.yml \
     --baselogdir=${BASELOGDIR} --verbose \
@@ -24,7 +24,7 @@ PYTHONPATH=. python prometheus/dl/scripts/train.py \
     --model_params/cls_net/hiddens=[512]:list
 
 echo "Training...4"
-PYTHONPATH=. python prometheus/dl/scripts/train.py \
+PYTHONPATH=. python catalyst/dl/scripts/train.py \
     --model-dir=finetune \
     --config=finetune/train.yml \
     --baselogdir=${BASELOGDIR} --verbose \

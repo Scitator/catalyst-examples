@@ -1,0 +1,3 @@
+[submodule "catalyst"]
+	path = catalyst
+	url = https://github.com/Scitator/catalyst.git

@@ -2,13 +2,13 @@
 set -e
 
 echo "Training..."
-PYTHONPATH=. python prometheus/dl/scripts/train.py \
+PYTHONPATH=. python catalyst/dl/scripts/train.py \
     --model-dir=finetune \
     --config=finetune/train.yml \
     --logdir=${LOGDIR} --verbose
 
 echo "Inference..."
-PYTHONPATH=. python prometheus/dl/scripts/inference.py \
+PYTHONPATH=. python catalyst/dl/scripts/inference.py \
    --model-dir=finetune \
    --resume=${LOGDIR}/checkpoint.best.pth.tar \
    --out-prefix=${LOGDIR}/dataset.predictions.{suffix}.npy \

@@ -3,7 +3,7 @@ set -e
 
 echo "projection creating..."
 mkdir -p ${LOGDIR}/projector
-PYTHONPATH=. python prometheus/scripts/project_embeddings.py \
+PYTHONPATH=. python catalyst/scripts/project_embeddings.py \
    --in-npy=${LOGDIR}/dataset.predictions.infer.embeddings.npy \
    --in-csv="./data/ants_bees/dataset.csv" \
    --out-dir=${LOGDIR}/projector \

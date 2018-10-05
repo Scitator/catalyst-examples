@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-PYTHONPATH=. python prometheus/dl/scripts/train.py \
+PYTHONPATH=. python catalyst/dl/scripts/train.py \
     --model-dir=finetune \
     --config=finetune/debug.yml \
     --logdir=${LOGDIR} --verbose

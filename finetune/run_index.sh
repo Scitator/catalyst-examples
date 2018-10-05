@@ -2,7 +2,7 @@
 set -e
 
 echo "index model creating..."
-PYTHONPATH=. python prometheus/scripts/create_index_model.py \
+PYTHONPATH=. python catalyst/scripts/create_index_model.py \
    --in-npy=${LOGDIR}/dataset.predictions.infer.embeddings.npy \
    --n-hidden=16 --knn-metric="l2" \
    --out-npy=${LOGDIR}/dataset.predictions.infer.embeddings.pca.npy \
@@ -10,7 +10,7 @@ PYTHONPATH=. python prometheus/scripts/create_index_model.py \
    --out-knn=${LOGDIR}/knn.embeddings.bin
 
 echo "index model testing..."
-PYTHONPATH=. python prometheus/scripts/check_index_model.py \
+PYTHONPATH=. python catalyst/scripts/check_index_model.py \
    --in-npy=${LOGDIR}/dataset.predictions.infer.embeddings.pca.npy \
    --in-knn=${LOGDIR}/knn.embeddings.bin \
    --knn-metric="l2" --batch-size=64 | tee ${LOGDIR}/index_check.txt

@@ -2,12 +2,12 @@ import collections
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from prometheus.utils.factory import UtilsFactory
-from prometheus.dl.callbacks import (
+from catalyst.utils.factory import UtilsFactory
+from catalyst.dl.callbacks import (
     Callback,
     ClassificationLossCallback, LoggerCallback, OptimizerCallback,
     CheckpointCallback, OneCycleLR, PrecisionCallback)
-from prometheus.dl.runner import ClassificationRunner
+from catalyst.dl.runner import ClassificationRunner
 
 
 class Net(nn.Module):

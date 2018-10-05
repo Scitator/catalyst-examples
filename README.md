@@ -1,4 +1,4 @@
-# Prometheus examples
+# Catalyst examples
 
 Run all examples from this dir.
 
@@ -6,10 +6,10 @@ Run all examples from this dir.
 
 Notebooks
 
-1. [cifar10 notebook](https://github.com/Scitator/prometheus-examples/blob/master/notebook-example.ipynb)
+1. [cifar10 notebook](https://github.com/Scitator/catalyst-examples/blob/master/notebook-example.ipynb)
     - cifar10 classification model
     - simple example of lib usage
-2. [segmentation notebook](https://github.com/Scitator/prometheus-examples/blob/master/segmentation-example.ipynb)
+2. [segmentation notebook](https://github.com/Scitator/catalyst-examples/blob/master/segmentation-example.ipynb)
     - segmentation with unet
     - model training and inference
     - predictions visialization
@@ -17,13 +17,13 @@ Notebooks
 ---
 
 Pipelines
-1. [cifar10 model training](https://github.com/Scitator/prometheus-examples/tree/master/cifar_simple)
+1. [cifar10 model training](https://github.com/Scitator/catalyst-examples/tree/master/cifar_simple)
     - pipeline example of lib usage
     - local and docker runs
     - tensorboard metrics visualization
-2. [cifar10 model training with stages](https://github.com/Scitator/prometheus-examples/tree/master/cifar_stages)
+2. [cifar10 model training with stages](https://github.com/Scitator/catalyst-examples/tree/master/cifar_stages)
     - pipeline example with stages support
-3. [finetune](https://github.com/Scitator/prometheus-examples/tree/master/finetune)
+3. [finetune](https://github.com/Scitator/catalyst-examples/tree/master/finetune)
     - classification model training and inference
     - different augmentations and stages usage example
     - index model creating

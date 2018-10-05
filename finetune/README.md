@@ -17,9 +17,9 @@ Additional
 ### Preparation
 
 Get the [data](https://www.dropbox.com/s/9438wx9ku9ke1pt/ants_bees.tar.gz) (`wget https://www.dropbox.com/s/9438wx9ku9ke1pt/ants_bees.tar.gz`)
-and unpack it to `prometheus-examples/data` folder:
+and unpack it to `catalyst-examples/data` folder:
 ```bash
-prometheus-examples/
+catalyst-examples/
     data/
         ants_bees/
             ants/
@@ -30,7 +30,7 @@ prometheus-examples/
 
 Process the data
 ```bash
-PYTHONPATH=. python prometheus/scripts/tag2label.py \
+PYTHONPATH=. python catalyst/scripts/tag2label.py \
     --in-dir=./data/ants_bees \
     --out-dataset=./data/ants_bees/dataset.csv \
     --out-labeling=./data/ants_bees/tag2cls.json
@@ -40,7 +40,7 @@ And `pip install tensorflow` for visualization.
 
 ### Docker
 
-For more information about used docker images goto `prometheus/docker`.
+For more information about used docker images goto `catalyst/docker`.
 
 ### Model training
 
@@ -51,7 +51,7 @@ docker run -it --rm --shm-size 8G --runtime=nvidia \
    -e "CUDA_VISIBLE_DEVICES=0" \
    -e "PYTHONPATH=." \
    -e "LOGDIR=/logdir" \
-   pro-gpu bash finetune/run_model.sh
+   catalyst-gpu bash finetune/run_model.sh
 ```
 
 ### Tensorboard metrics visualization
@@ -76,7 +76,7 @@ docker run -it --rm --shm-size 8G \
    -v $(pwd):/src/ -v $LOGDIR:/logdir/ \
    -e "PYTHONPATH=." \
    -e "LOGDIR=/logdir" \
-   pro-gpu bash finetune/run_index.sh
+   catalyst-gpu bash finetune/run_index.sh
 ```
 
 ### LrFinder example
@@ -88,7 +88,7 @@ docker run -it --rm --shm-size 8G --runtime=nvidia \
    -e "CUDA_VISIBLE_DEVICES=0" \
    -e "PYTHONPATH=." \
    -e "LOGDIR=/logdir" \
-   pro-gpu bash finetune/run_lrfinder.sh
+   catalyst-gpu bash finetune/run_lrfinder.sh
 tensorboard --logdir=./logs/finetune/lrfinder
 ```
 
@@ -101,6 +101,6 @@ docker run -it --rm --shm-size 8G --runtime=nvidia \
    -e "CUDA_VISIBLE_DEVICES=0" \
    -e "PYTHONPATH=." \
    -e "BASELOGDIR=/logdir" \
-   pro-gpu bash finetune/run_grid.sh
+   catalyst-gpu bash finetune/run_grid.sh
 tensorboard --logdir=./logs/finetune
 ```

@@ -3,7 +3,7 @@
 ### Local run
 
 ```bash
-PYTHONPATH=. python prometheus/dl/scripts/train.py \
+PYTHONPATH=. python catalyst/dl/scripts/train.py \
    --config=./cifar_stages/config.yml
 ```
 
@@ -14,14 +14,14 @@ For tensorboard support use
 
 ### Docker run
 
-For docker image goto `prometheus/docker`
+For docker image goto `catalyst/docker`
 
 ```bash
 export LOGDIR=$(pwd)/logs/cifar_stages_docker
 docker run -it --rm \
    -v $(pwd):/src -v $LOGDIR:/logdir/ \
    -e PYTHONPATH=. \
-   pro-cpu python prometheus/dl/scripts/train.py \
+   catalyst-cpu python catalyst/dl/scripts/train.py \
    --config=./cifar_stages/config.yml --logdir=/logdir
 ```
 

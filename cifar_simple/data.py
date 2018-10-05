@@ -2,7 +2,7 @@ import collections
 import torch
 import torchvision
 from torchvision import transforms
-from prometheus.dl.datasource import AbstractDataSource
+from catalyst.dl.datasource import AbstractDataSource
 
 
 class DataSource(AbstractDataSource):

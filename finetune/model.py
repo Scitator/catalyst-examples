@@ -2,14 +2,14 @@ import collections
 import numpy as np
 import torch
 import torch.nn as nn
-from prometheus.utils.factory import UtilsFactory
-from prometheus.dl.callbacks import (
+from catalyst.utils.factory import UtilsFactory
+from catalyst.dl.callbacks import (
     Callback, LoggerCallback, OptimizerCallback, InferCallback,
     CheckpointCallback, OneCycleLR, LRFinder, PrecisionCallback)
-from prometheus.dl.runner import AbstractModelRunner
-from prometheus.models.resnet_encoder import ResnetEncoder
-from prometheus.models.sequential import SequentialNet
-from prometheus.dl.state import RunnerState
+from catalyst.dl.runner import AbstractModelRunner
+from catalyst.models.resnet_encoder import ResnetEncoder
+from catalyst.models.sequential import SequentialNet
+from catalyst.dl.state import RunnerState
 
 
 # ---- Model ----

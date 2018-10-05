@@ -11,12 +11,12 @@ from albumentations import (Resize, JpegCompression, Normalize,
     IAAAdditiveGaussianNoise, GaussNoise, MotionBlur, MedianBlur,
     IAASharpen, IAAEmboss, RandomContrast, RandomBrightness, OneOf, Compose)
 
-from prometheus.utils.parse import parse_in_csvs
-from prometheus.utils.factory import UtilsFactory
-from prometheus.data.reader import ImageReader, ScalarReader, ReaderCompose
-from prometheus.data.augmentor import Augmentor
-from prometheus.data.sampler import BalanceClassSampler
-from prometheus.dl.datasource import AbstractDataSource
+from catalyst.utils.parse import parse_in_csvs
+from catalyst.utils.factory import UtilsFactory
+from catalyst.data.reader import ImageReader, ScalarReader, ReaderCompose
+from catalyst.data.augmentor import Augmentor
+from catalyst.data.sampler import BalanceClassSampler
+from catalyst.dl.datasource import AbstractDataSource
 
 # ---- Augmentations ----
 
