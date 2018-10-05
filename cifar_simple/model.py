@@ -3,8 +3,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 from catalyst.utils.factory import UtilsFactory
 from catalyst.dl.callbacks import (
-    ClassificationLossCallback, LoggerCallback, OptimizerCallback,
-    CheckpointCallback, OneCycleLR, PrecisionCallback)
+    ClassificationLossCallback,
+    BaseMetrics, Logger, TensorboardLogger,
+    OptimizerCallback, CheckpointCallback,
+    PrecisionCallback, OneCycleLR)
 from catalyst.dl.runner import ClassificationRunner
 
 
@@ -51,12 +53,21 @@ class ModelRunner(ClassificationRunner):
 
         callbacks["loss"] = ClassificationLossCallback()
         callbacks["optimizer"] = OptimizerCallback()
-        callbacks["one-cycle"] = OneCycleLR(
-            cycle_len=args.epochs,
-            div=3, cut_div=4, momentum_range=(0.95, 0.85))
+        callbacks["metrics"] = BaseMetrics()
         callbacks["precision"] = PrecisionCallback(
             precision_args=[1, 3, 5])
-        callbacks["logger"] = LoggerCallback()
         callbacks["saver"] = CheckpointCallback()
+
+        # OneCylce custom scheduler callback
+        callbacks["scheduler"] = OneCycleLR(
+            cycle_len=args.epochs,
+            div=3, cut_div=4, momentum_range=(0.95, 0.85))
+
+        # Pytorch scheduler callback
+        # callbacks["scheduler"] = SchedulerCallback(
+        #     reduce_metric="precision01")
+
+        callbacks["logger"] = Logger()
+        callbacks["tflogger"] = TensorboardLogger()
 
         return callbacks

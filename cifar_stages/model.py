@@ -4,9 +4,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 from catalyst.utils.factory import UtilsFactory
 from catalyst.dl.callbacks import (
-    Callback,
-    ClassificationLossCallback, LoggerCallback, OptimizerCallback,
-    CheckpointCallback, OneCycleLR, PrecisionCallback)
+    ClassificationLossCallback, Callback,
+    BaseMetrics, Logger, TensorboardLogger,
+    OptimizerCallback, CheckpointCallback,
+    PrecisionCallback, OneCycleLR)
 from catalyst.dl.runner import ClassificationRunner
 
 
@@ -64,20 +65,23 @@ class ModelRunner(ClassificationRunner):
     def prepare_callbacks(*, callbacks_params, args, mode, stage=None):
         callbacks = collections.OrderedDict()
 
-        callbacks["stage"] = StageCallback()
         callbacks["loss"] = ClassificationLossCallback()
         callbacks["optimizer"] = OptimizerCallback()
-        callbacks["one-cycle"] = OneCycleLR(
+        callbacks["metrics"] = BaseMetrics()
+        callbacks["precision"] = PrecisionCallback(
+            precision_args=[1, 3, 5])
+        callbacks["saver"] = CheckpointCallback()
+
+        # OneCylce custom scheduler callback
+        callbacks["scheduler"] = OneCycleLR(
             cycle_len=args.epochs,
             div=3, cut_div=4, momentum_range=(0.95, 0.85))
-        callbacks["precision"] = PrecisionCallback(
-            precision_args=callbacks_params.get("precision_args", [1, 3, 5]))
-        callbacks["logger"] = LoggerCallback(
-            reset_step=callbacks_params.get("reset_step", False))
-        callbacks["saver"] = CheckpointCallback(
-            save_n_best=getattr(args, "save_n_best", 5),
-            resume=args.resume,
-            main_metric=callbacks_params.get("main_metric", "loss"),
-            minimize=callbacks_params.get("minimize_metric", True))
+
+        # Pytorch scheduler callback
+        # callbacks["scheduler"] = SchedulerCallback(
+        #     reduce_metric="precision01")
+
+        callbacks["logger"] = Logger()
+        callbacks["tflogger"] = TensorboardLogger()
 
         return callbacks

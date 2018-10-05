@@ -4,8 +4,10 @@ import torch
 import torch.nn as nn
 from catalyst.utils.factory import UtilsFactory
 from catalyst.dl.callbacks import (
-    Callback, LoggerCallback, OptimizerCallback, InferCallback,
-    CheckpointCallback, OneCycleLR, LRFinder, PrecisionCallback)
+    ClassificationLossCallback, Callback, InferCallback,
+    BaseMetrics, Logger, TensorboardLogger,
+    OptimizerCallback, CheckpointCallback,
+    PrecisionCallback, OneCycleLR, LRFinder)
 from catalyst.dl.runner import AbstractModelRunner
 from catalyst.models.resnet_encoder import ResnetEncoder
 from catalyst.models.sequential import SequentialNet
@@ -127,30 +129,39 @@ class ModelRunner(AbstractModelRunner):
                     emb_l2_reg=callbacks_params.get("emb_l2_reg", -1))
                 callbacks["optimizer"] = OptimizerCallback(
                     grad_clip=callbacks_params.get("grad_clip", None))
+                callbacks["metrics"] = BaseMetrics()
                 callbacks["lr-finder"] = LRFinder(
                     final_lr=callbacks_params.get("final_lr", 0.1),
                     n_steps=callbacks_params.get("n_steps", None))
-                callbacks["logger"] = LoggerCallback(
-                    reset_step=callbacks_params.get("reset_step", False))
+                callbacks["logger"] = Logger()
+                callbacks["tflogger"] = TensorboardLogger()
             else:
                 callbacks["stage"] = StageCallback()
                 callbacks["loss"] = LossCallback(
                     emb_l2_reg=callbacks_params.get("emb_l2_reg", -1))
                 callbacks["optimizer"] = OptimizerCallback(
                     grad_clip=callbacks_params.get("grad_clip", None))
-                callbacks["one-cycle"] = OneCycleLR(
-                    cycle_len=args.epochs,
-                    div=3, cut_div=4, momentum_range=(0.95, 0.85))
+                callbacks["metrics"] = BaseMetrics()
                 callbacks["precision"] = PrecisionCallback(
                     precision_args=callbacks_params.get(
                         "precision_args", [1, 3, 5]))
-                callbacks["logger"] = LoggerCallback(
-                    reset_step=callbacks_params.get("reset_step", False))
                 callbacks["saver"] = CheckpointCallback(
                     save_n_best=getattr(args, "save_n_best", 5),
                     resume=args.resume,
                     main_metric=callbacks_params.get("main_metric", "loss"),
                     minimize=callbacks_params.get("minimize_metric", True))
+
+                # OneCylce custom scheduler callback
+                callbacks["one-cycle"] = OneCycleLR(
+                    cycle_len=args.epochs,
+                    div=3, cut_div=4, momentum_range=(0.95, 0.85))
+
+                # Pytorch scheduler callback
+                # callbacks["scheduler"] = SchedulerCallback(
+                #     reduce_metric="precision01")
+
+                callbacks["logger"] = Logger()
+                callbacks["tflogger"] = TensorboardLogger()
         elif mode == "infer":
             callbacks["saver"] = CheckpointCallback(resume=args.resume)
             callbacks["infer"] = InferCallback(out_prefix=args.out_prefix)
