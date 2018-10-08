@@ -42,8 +42,6 @@ stages:
   callbacks_params:
     emb_l2_reg: -1
     precision_args: [1]
-    main_metric: loss
-    minimize_metric: true
     final_lr: 0.01
     n_steps: 1000
 

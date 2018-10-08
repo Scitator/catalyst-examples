@@ -1,12 +1,11 @@
 import collections
-import numpy as np
 import torch
 import torch.nn as nn
 from catalyst.utils.factory import UtilsFactory
 from catalyst.dl.callbacks import (
-    ClassificationLossCallback, Callback, InferCallback,
+    Callback, InferCallback,
     BaseMetrics, Logger, TensorboardLogger,
-    OptimizerCallback, CheckpointCallback,
+    OptimizerCallback, SchedulerCallback, CheckpointCallback,
     PrecisionCallback, OneCycleLR, LRFinder)
 from catalyst.dl.runner import AbstractModelRunner
 from catalyst.models.resnet_encoder import ResnetEncoder
@@ -56,7 +55,9 @@ def prepare_model(config):
 
 def prepare_logdir(config):
     model_params = config["model_params"]
-    return f"{model_params['model']}" \
+    data_params = config["stages"]["data_params"]
+    return f"{data_params['train_folds']}" \
+           f"-{model_params['model']}" \
            f"-{model_params['img_encoder']['arch']}" \
            f"-{model_params['img_encoder']['pooling']}" \
            f"-{model_params['cls_net']['hiddens']}" \
@@ -115,6 +116,9 @@ class ModelRunner(AbstractModelRunner):
 
         if mode == "train":
             additional_kwargs["criterion"] = self.criterion.get("main", None)
+            if stage != "debug":
+                additional_kwargs["main_metric"] = "precision01"
+                additional_kwargs["minimize_metric"] = False
 
         return super()._init_state(mode=mode, stage=stage, **additional_kwargs)
 
@@ -145,11 +149,6 @@ class ModelRunner(AbstractModelRunner):
                 callbacks["precision"] = PrecisionCallback(
                     precision_args=callbacks_params.get(
                         "precision_args", [1, 3, 5]))
-                callbacks["saver"] = CheckpointCallback(
-                    save_n_best=getattr(args, "save_n_best", 5),
-                    resume=args.resume,
-                    main_metric=callbacks_params.get("main_metric", "loss"),
-                    minimize=callbacks_params.get("minimize_metric", True))
 
                 # OneCylce custom scheduler callback
                 callbacks["one-cycle"] = OneCycleLR(
@@ -160,6 +159,9 @@ class ModelRunner(AbstractModelRunner):
                 # callbacks["scheduler"] = SchedulerCallback(
                 #     reduce_metric="precision01")
 
+                callbacks["saver"] = CheckpointCallback(
+                    save_n_best=getattr(args, "save_n_best", 5),
+                    resume=args.resume)
                 callbacks["logger"] = Logger()
                 callbacks["tflogger"] = TensorboardLogger()
         elif mode == "infer":

@@ -5,7 +5,7 @@ from catalyst.utils.factory import UtilsFactory
 from catalyst.dl.callbacks import (
     ClassificationLossCallback,
     BaseMetrics, Logger, TensorboardLogger,
-    OptimizerCallback, CheckpointCallback,
+    OptimizerCallback, SchedulerCallback, CheckpointCallback,
     PrecisionCallback, OneCycleLR)
 from catalyst.dl.runner import ClassificationRunner
 
@@ -56,7 +56,6 @@ class ModelRunner(ClassificationRunner):
         callbacks["metrics"] = BaseMetrics()
         callbacks["precision"] = PrecisionCallback(
             precision_args=[1, 3, 5])
-        callbacks["saver"] = CheckpointCallback()
 
         # OneCylce custom scheduler callback
         callbacks["scheduler"] = OneCycleLR(
@@ -67,6 +66,7 @@ class ModelRunner(ClassificationRunner):
         # callbacks["scheduler"] = SchedulerCallback(
         #     reduce_metric="precision01")
 
+        callbacks["saver"] = CheckpointCallback()
         callbacks["logger"] = Logger()
         callbacks["tflogger"] = TensorboardLogger()
 

@@ -104,3 +104,17 @@ docker run -it --rm --shm-size 8G --runtime=nvidia \
    catalyst-gpu bash finetune/run_grid.sh
 tensorboard --logdir=./logs/finetune
 ```
+
+
+### KFold training metrics visualization
+
+```bash
+export BASELOGDIR=$(pwd)/logs/kfold
+docker run -it --rm --shm-size 8G --runtime=nvidia \
+   -v $(pwd):/src/ -v $BASELOGDIR:/logdir/ \
+   -e "CUDA_VISIBLE_DEVICES=0" \
+   -e "PYTHONPATH=." \
+   -e "BASELOGDIR=/logdir" \
+   catalyst-gpu bash finetune/run_kfold.sh
+tensorboard --logdir=./logs/kfold
+```
