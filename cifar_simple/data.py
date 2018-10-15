@@ -8,13 +8,13 @@ from catalyst.dl.datasource import AbstractDataSource
 class DataSource(AbstractDataSource):
 
     @staticmethod
-    def prepare_transforms(*, mode, stage=None):
+    def prepare_transforms(*, mode, stage=None, **kwargs):
         return transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
     @staticmethod
-    def prepare_loaders(args, data_params, stage=None):
+    def prepare_loaders(args, stage=None, **kwargs):
 
         loaders = collections.OrderedDict()
 

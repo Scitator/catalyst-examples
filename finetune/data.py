@@ -77,7 +77,7 @@ INFER_TRANSFORM_FN = [
 class DataSource(AbstractDataSource):
 
     @staticmethod
-    def prepare_transforms(*, mode, stage=None):
+    def prepare_transforms(*, mode, stage=None, **kwargs):
         if mode == "train":
             if stage in ["debug", "stage1"]:
                 return transforms.Compose(
@@ -90,15 +90,27 @@ class DataSource(AbstractDataSource):
             return transforms.Compose(INFER_TRANSFORM_FN)
 
     @staticmethod
-    def prepare_loaders(args, data_params, stage=None):
+    def prepare_loaders(
+            args, stage=None, datapath=None,
+            in_csv=None, in_csv_train=None, in_csv_valid=None, in_csv_infer=None,
+            train_folds=None, valid_folds=None,
+            tag2class=None, class_column=None, tag_column=None,
+            folds_seed=42, n_folds=5):
         loaders = collections.OrderedDict()
 
-        df, df_train, df_valid, df_infer = parse_in_csvs(data_params)
+        df, df_train, df_valid, df_infer = parse_in_csvs(
+            in_csv=in_csv,
+            in_csv_train=in_csv_train, in_csv_valid=in_csv_valid,
+            in_csv_infer=in_csv_infer,
+            train_folds=train_folds, valid_folds=valid_folds,
+            tag2class=tag2class,
+            class_column=class_column, tag_column=tag_column,
+            folds_seed=folds_seed, n_folds=n_folds)
 
         open_fn = [
             ImageReader(
                 row_key="filepath", dict_key="image",
-                datapath=data_params.get("datapath", None)),
+                datapath=datapath),
             ScalarReader(
                 row_key="class", dict_key="targets",
                 default_value=-1, dtype=np.int64)

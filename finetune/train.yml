@@ -22,6 +22,10 @@ args:
 
 stages:
 
+  state_params:
+    main_metric: precision01
+    minimize_metric: False
+
   criterion_params:
     criterion: CrossEntropyLoss
 

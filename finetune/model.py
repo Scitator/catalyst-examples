@@ -116,9 +116,6 @@ class ModelRunner(AbstractModelRunner):
 
         if mode == "train":
             additional_kwargs["criterion"] = self.criterion.get("main", None)
-            if stage != "debug":
-                additional_kwargs["main_metric"] = "precision01"
-                additional_kwargs["minimize_metric"] = False
 
         return super()._init_state(mode=mode, stage=stage, **additional_kwargs)
 
