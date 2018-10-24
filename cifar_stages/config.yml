@@ -18,8 +18,6 @@ stages:
 
   callbacks_params:
       precision_args: [1, 3, 5, 10]
-      main_metric: precision03
-      minimize_metric: false
 
   stage1:
 

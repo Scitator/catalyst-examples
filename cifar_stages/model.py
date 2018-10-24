@@ -46,8 +46,12 @@ def prepare_model(config):
         config=config, available_networks=NETWORKS)
 
 
-class StageCallback(Callback):
-    def on_stage_init(self, model, stage):
+class ModelRunner(ClassificationRunner):
+
+    @staticmethod
+    def prepare_stage_model(*, model, stage, **kwargs):
+        ClassificationRunner.prepare_stage_model(
+            model=model, stage=stage, **kwargs)
         model_ = model
         if isinstance(model, torch.nn.DataParallel):
             model_ = model_.module
@@ -58,18 +62,20 @@ class StageCallback(Callback):
                 for param in layer.parameters():
                     param.requires_grad = False
 
-
-class ModelRunner(ClassificationRunner):
-
     @staticmethod
-    def prepare_callbacks(*, callbacks_params, args, mode, stage=None):
+    def prepare_callbacks(
+            *, args, mode, stage=None,
+            precision_args=None, reduce_metric=None, **kwargs):
+        assert len(kwargs) == 0
+        precision_args = precision_args or [1, 3, 5]
+
         callbacks = collections.OrderedDict()
 
         callbacks["loss"] = ClassificationLossCallback()
         callbacks["optimizer"] = OptimizerCallback()
         callbacks["metrics"] = BaseMetrics()
         callbacks["precision"] = PrecisionCallback(
-            precision_args=[1, 3, 5])
+            precision_args=precision_args)
 
         # OneCylce custom scheduler callback
         callbacks["scheduler"] = OneCycleLR(
@@ -78,7 +84,7 @@ class ModelRunner(ClassificationRunner):
 
         # Pytorch scheduler callback
         # callbacks["scheduler"] = SchedulerCallback(
-        #     reduce_metric="precision01")
+        #     reduce_metric=reduce_metric)
 
         callbacks["saver"] = CheckpointCallback()
         callbacks["logger"] = Logger()

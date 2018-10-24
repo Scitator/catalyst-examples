@@ -66,22 +66,6 @@ def prepare_logdir(config):
 
 # ---- Callbacks ----
 
-class StageCallback(Callback):
-    def on_stage_init(self, model, stage):
-        model_ = model
-        if isinstance(model, torch.nn.DataParallel):
-            model_ = model_.module
-
-        if stage in ["debug", "stage1"]:
-            for param in model_.encoder.parameters():
-                param.requires_grad = False
-        elif stage == "stage2":
-            for param in model_.encoder.parameters():
-                param.requires_grad = True
-        else:
-            raise NotImplemented
-
-
 class LossCallback(Callback):
     def __init__(self, emb_l2_reg=-1):
         self.emb_l2_reg = emb_l2_reg
@@ -120,32 +104,53 @@ class ModelRunner(AbstractModelRunner):
         return super()._init_state(mode=mode, stage=stage, **additional_kwargs)
 
     @staticmethod
-    def prepare_callbacks(*, callbacks_params, args, mode, stage=None):
+    def prepare_stage_model(*, model, stage, **kwargs):
+        AbstractModelRunner.prepare_stage_model(
+            model=model, stage=stage, **kwargs)
+        model_ = model
+        if isinstance(model, torch.nn.DataParallel):
+            model_ = model_.module
+
+        if stage in ["debug", "stage1"]:
+            for param in model_.encoder.parameters():
+                param.requires_grad = False
+        elif stage == "stage2":
+            for param in model_.encoder.parameters():
+                param.requires_grad = True
+        else:
+            raise NotImplemented
+
+    @staticmethod
+    def prepare_callbacks(
+            *, args, mode, stage=None,
+            emb_l2_reg=-1,
+            save_n_best=5,
+            precision_args=None, reduce_metric=None,
+            grad_clip=None,
+            final_lr=0.1, n_steps=None, **kwargs):
+        assert len(kwargs) == 0
+        precision_args = precision_args or [1, 3, 5]
+
         callbacks = collections.OrderedDict()
 
         if mode == "train":
             if stage == "debug":
-                callbacks["stage"] = StageCallback()
-                callbacks["loss"] = LossCallback(
-                    emb_l2_reg=callbacks_params.get("emb_l2_reg", -1))
+                callbacks["loss"] = LossCallback(emb_l2_reg=emb_l2_reg)
                 callbacks["optimizer"] = OptimizerCallback(
-                    grad_clip=callbacks_params.get("grad_clip", None))
+                    grad_clip=grad_clip)
                 callbacks["metrics"] = BaseMetrics()
                 callbacks["lr-finder"] = LRFinder(
-                    final_lr=callbacks_params.get("final_lr", 0.1),
-                    n_steps=callbacks_params.get("n_steps", None))
+                    final_lr=final_lr,
+                    n_steps=n_steps)
                 callbacks["logger"] = Logger()
                 callbacks["tflogger"] = TensorboardLogger()
             else:
-                callbacks["stage"] = StageCallback()
-                callbacks["loss"] = LossCallback(
-                    emb_l2_reg=callbacks_params.get("emb_l2_reg", -1))
+                callbacks["loss"] = LossCallback(emb_l2_reg=emb_l2_reg)
                 callbacks["optimizer"] = OptimizerCallback(
-                    grad_clip=callbacks_params.get("grad_clip", None))
+                    grad_clip=grad_clip)
                 callbacks["metrics"] = BaseMetrics()
                 callbacks["precision"] = PrecisionCallback(
-                    precision_args=callbacks_params.get(
-                        "precision_args", [1, 3, 5]))
+                    precision_args=precision_args)
 
                 # OneCylce custom scheduler callback
                 callbacks["one-cycle"] = OneCycleLR(
@@ -154,10 +159,10 @@ class ModelRunner(AbstractModelRunner):
 
                 # Pytorch scheduler callback
                 # callbacks["scheduler"] = SchedulerCallback(
-                #     reduce_metric="precision01")
+                #     reduce_metric=reduce_metric)
 
                 callbacks["saver"] = CheckpointCallback(
-                    save_n_best=getattr(args, "save_n_best", 5),
+                    save_n_best=save_n_best,
                     resume=args.resume)
                 callbacks["logger"] = Logger()
                 callbacks["tflogger"] = TensorboardLogger()

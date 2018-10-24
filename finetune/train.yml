@@ -39,7 +39,6 @@ stages:
     datapath: "./data/ants_bees/"
 
   callbacks_params:
-    emb_l2_reg: -1
     precision_args: [1]
 
   # train head
