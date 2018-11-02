@@ -91,8 +91,10 @@ class DataSource(AbstractDataSource):
 
     @staticmethod
     def prepare_loaders(
-            args, stage=None, datapath=None,
-            in_csv=None, in_csv_train=None, in_csv_valid=None, in_csv_infer=None,
+            args, stage=None,
+            datapath=None,
+            in_csv=None,
+            in_csv_train=None, in_csv_valid=None, in_csv_infer=None,
             train_folds=None, valid_folds=None,
             tag2class=None, class_column=None, tag_column=None,
             folds_seed=42, n_folds=5):
