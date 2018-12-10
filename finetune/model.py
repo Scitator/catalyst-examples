@@ -80,28 +80,12 @@ class LossCallback(Callback):
             loss += torch.mean(
                 torch.norm(embeddings.float(), dim=1)) * self.emb_l2_reg
 
-        state.loss["main"] = loss
+        state.loss = loss
 
 
 # ---- Runner ----
 
 class ModelRunner(AbstractModelRunner):
-
-    def _init_state(
-            self, *,
-            mode: str,
-            stage: str = None,
-            **kwargs) -> RunnerState:
-        """
-        Inner method for children's classes for state specific initialization.
-        :return: RunnerState with all necessary parameters.
-        """
-        additional_kwargs = {}
-
-        if mode == "train":
-            additional_kwargs["criterion"] = self.criterion.get("main", None)
-
-        return super()._init_state(mode=mode, stage=stage, **additional_kwargs)
 
     @staticmethod
     def prepare_stage_model(*, model, stage, **kwargs):
@@ -137,7 +121,7 @@ class ModelRunner(AbstractModelRunner):
             if stage == "debug":
                 callbacks["loss"] = LossCallback(emb_l2_reg=emb_l2_reg)
                 callbacks["optimizer"] = OptimizerCallback(
-                    grad_clip=grad_clip)
+                    grad_clip_params=grad_clip)
                 callbacks["metrics"] = BaseMetrics()
                 callbacks["lr-finder"] = LRFinder(
                     final_lr=final_lr,
@@ -147,7 +131,7 @@ class ModelRunner(AbstractModelRunner):
             else:
                 callbacks["loss"] = LossCallback(emb_l2_reg=emb_l2_reg)
                 callbacks["optimizer"] = OptimizerCallback(
-                    grad_clip=grad_clip)
+                    grad_clip_params=grad_clip)
                 callbacks["metrics"] = BaseMetrics()
                 callbacks["precision"] = PrecisionCallback(
                     precision_args=precision_args)
