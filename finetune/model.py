@@ -4,13 +4,12 @@ import torch.nn as nn
 from catalyst.utils.factory import UtilsFactory
 from catalyst.dl.callbacks import (
     Callback, InferCallback,
-    BaseMetrics, Logger, TensorboardLogger,
+    Logger, TensorboardLogger,
     OptimizerCallback, SchedulerCallback, CheckpointCallback,
     PrecisionCallback, OneCycleLR, LRFinder)
 from catalyst.dl.runner import AbstractModelRunner
 from catalyst.models.resnet_encoder import ResnetEncoder
 from catalyst.models.sequential import SequentialNet
-from catalyst.dl.state import RunnerState
 
 
 # ---- Model ----
@@ -122,7 +121,6 @@ class ModelRunner(AbstractModelRunner):
                 callbacks["loss"] = LossCallback(emb_l2_reg=emb_l2_reg)
                 callbacks["optimizer"] = OptimizerCallback(
                     grad_clip_params=grad_clip)
-                callbacks["metrics"] = BaseMetrics()
                 callbacks["lr-finder"] = LRFinder(
                     final_lr=final_lr,
                     n_steps=n_steps)
@@ -132,7 +130,6 @@ class ModelRunner(AbstractModelRunner):
                 callbacks["loss"] = LossCallback(emb_l2_reg=emb_l2_reg)
                 callbacks["optimizer"] = OptimizerCallback(
                     grad_clip_params=grad_clip)
-                callbacks["metrics"] = BaseMetrics()
                 callbacks["precision"] = PrecisionCallback(
                     precision_args=precision_args)
 

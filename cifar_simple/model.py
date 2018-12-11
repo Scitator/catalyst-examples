@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from catalyst.utils.factory import UtilsFactory
 from catalyst.dl.callbacks import (
     ClassificationLossCallback,
-    BaseMetrics, Logger, TensorboardLogger,
+    Logger, TensorboardLogger,
     OptimizerCallback, SchedulerCallback, CheckpointCallback,
     PrecisionCallback, OneCycleLR)
 from catalyst.dl.runner import ClassificationRunner
@@ -58,7 +58,6 @@ class ModelRunner(ClassificationRunner):
 
         callbacks["loss"] = ClassificationLossCallback()
         callbacks["optimizer"] = OptimizerCallback()
-        callbacks["metrics"] = BaseMetrics()
         callbacks["precision"] = PrecisionCallback(
             precision_args=precision_args)
 
