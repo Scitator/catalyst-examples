@@ -13,4 +13,3 @@ callbacks_params:
     callback: CheckpointCallback
   infer:
     callback: InferCallback
-    out_prefix:
