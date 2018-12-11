@@ -1,12 +1,8 @@
 import collections
 import torch
 import torch.nn as nn
+import catalyst.dl.callbacks as callbacks
 from catalyst.utils.factory import UtilsFactory
-from catalyst.dl.callbacks import (
-    Callback, InferCallback,
-    Logger, TensorboardLogger,
-    OptimizerCallback, SchedulerCallback, CheckpointCallback,
-    PrecisionCallback, OneCycleLR, LRFinder)
 from catalyst.dl.runner import AbstractModelRunner
 from catalyst.models.resnet_encoder import ResnetEncoder
 from catalyst.models.sequential import SequentialNet
@@ -65,7 +61,7 @@ def prepare_logdir(config):
 
 # ---- Callbacks ----
 
-class LossCallback(Callback):
+class LossCallback(callbacks.Callback):
     def __init__(self, emb_l2_reg=-1):
         self.emb_l2_reg = emb_l2_reg
 
@@ -80,6 +76,9 @@ class LossCallback(Callback):
                 torch.norm(embeddings.float(), dim=1)) * self.emb_l2_reg
 
         state.loss = loss
+
+
+callbacks.__dict__["LossCallback"] = LossCallback
 
 
 # ---- Runner ----
@@ -102,58 +101,6 @@ class ModelRunner(AbstractModelRunner):
                 param.requires_grad = True
         else:
             raise NotImplemented
-
-    @staticmethod
-    def prepare_callbacks(
-            *, args, mode, stage=None,
-            emb_l2_reg=-1,
-            save_n_best=5,
-            precision_args=None, reduce_metric=None,
-            grad_clip=None,
-            final_lr=0.1, n_steps=None, **kwargs):
-        assert len(kwargs) == 0
-        precision_args = precision_args or [1, 3, 5]
-
-        callbacks = collections.OrderedDict()
-
-        if mode == "train":
-            if stage == "debug":
-                callbacks["loss"] = LossCallback(emb_l2_reg=emb_l2_reg)
-                callbacks["optimizer"] = OptimizerCallback(
-                    grad_clip_params=grad_clip)
-                callbacks["lr-finder"] = LRFinder(
-                    final_lr=final_lr,
-                    n_steps=n_steps)
-                callbacks["logger"] = Logger()
-                callbacks["tflogger"] = TensorboardLogger()
-            else:
-                callbacks["loss"] = LossCallback(emb_l2_reg=emb_l2_reg)
-                callbacks["optimizer"] = OptimizerCallback(
-                    grad_clip_params=grad_clip)
-                callbacks["precision"] = PrecisionCallback(
-                    precision_args=precision_args)
-
-                # OneCylce custom scheduler callback
-                callbacks["one-cycle"] = OneCycleLR(
-                    cycle_len=args.epochs,
-                    div=3, cut_div=4, momentum_range=(0.95, 0.85))
-
-                # Pytorch scheduler callback
-                # callbacks["scheduler"] = SchedulerCallback(
-                #     reduce_metric=reduce_metric)
-
-                callbacks["saver"] = CheckpointCallback(
-                    save_n_best=save_n_best,
-                    resume=args.resume)
-                callbacks["logger"] = Logger()
-                callbacks["tflogger"] = TensorboardLogger()
-        elif mode == "infer":
-            callbacks["saver"] = CheckpointCallback(resume=args.resume)
-            callbacks["infer"] = InferCallback(out_prefix=args.out_prefix)
-        else:
-            raise NotImplementedError
-
-        return callbacks
 
     @staticmethod
     def _batch_handler(*, dct, model):

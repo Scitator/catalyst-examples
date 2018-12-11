@@ -40,10 +40,19 @@ stages:
     datapath: "./data/ants_bees/"
 
   callbacks_params:
-    emb_l2_reg: -1
-    precision_args: [1]
-    final_lr: 0.01
-    n_steps: 1000
+    loss:
+      callback: LossCallback
+      emb_l2_reg: -1
+    optimizer:
+      callback: OptimizerCallback
+    finder:
+      callback: LRFinder
+      final_lr: 0.01
+      n_steps: 1000
+    logger:
+      callback: Logger
+    tflogger:
+      callback: TensorboardLogger
 
   debug:
 

@@ -8,4 +8,9 @@ args:
   batch_size: 64
 
 stages: null
-callbacks_params: null
+callbacks_params:
+  loader:
+    callback: CheckpointCallback
+  infer:
+    callback: InferCallback
+    out_prefix:

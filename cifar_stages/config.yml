@@ -1,6 +1,6 @@
 model_params:
   fp16: false       # general flag
-  model: simple   # model from NETWORKS to use
+  model: simple     # model from NETWORKS to use
 
 args:
   workers: 4
@@ -10,14 +10,34 @@ args:
 stages:
 
   state_params:
-    main_metric: precision01
+    main_metric: &reduce_metric precision01
     minimize_metric: False
 
   criterion_params:
       criterion: CrossEntropyLoss
 
+  scheduler_params:
+    scheduler: MultiStepLR
+    milestones: [10]
+    gamma: 0.3
+
   callbacks_params:
-      precision_args: [1, 3, 5, 10]
+    loss:
+      callback: ClassificationLossCallback
+    optimizer:
+      callback: OptimizerCallback
+    precision:
+      callback: PrecisionCallback
+      precision_args: [1, 3, 5]
+    scheduler:
+      callback: SchedulerCallback
+      reduce_metric: *reduce_metric
+    saver:
+      callback: CheckpointCallback
+    logger:
+      callback: Logger
+    tflogger:
+      callback: TensorboardLogger
 
   stage1:
 

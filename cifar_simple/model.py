@@ -1,13 +1,7 @@
-import collections
 import torch.nn as nn
 import torch.nn.functional as F
 from catalyst.utils.factory import UtilsFactory
-from catalyst.dl.callbacks import (
-    ClassificationLossCallback,
-    Logger, TensorboardLogger,
-    OptimizerCallback, SchedulerCallback, CheckpointCallback,
-    PrecisionCallback, OneCycleLR)
-from catalyst.dl.runner import ClassificationRunner
+from catalyst.dl.runner import ClassificationRunner as ModelRunner
 
 
 class Net(nn.Module):
@@ -43,35 +37,3 @@ NETWORKS = {
 def prepare_model(config):
     return UtilsFactory.create_model(
         config=config, available_networks=NETWORKS)
-
-
-class ModelRunner(ClassificationRunner):
-
-    @staticmethod
-    def prepare_callbacks(
-            *, args, mode, stage=None,
-            precision_args=None, reduce_metric=None, **kwargs):
-        assert len(kwargs) == 0
-        precision_args = precision_args or [1, 3, 5]
-
-        callbacks = collections.OrderedDict()
-
-        callbacks["loss"] = ClassificationLossCallback()
-        callbacks["optimizer"] = OptimizerCallback()
-        callbacks["precision"] = PrecisionCallback(
-            precision_args=precision_args)
-
-        # OneCylce custom scheduler callback
-        callbacks["scheduler"] = OneCycleLR(
-            cycle_len=args.epochs,
-            div=3, cut_div=4, momentum_range=(0.95, 0.85))
-
-        # Pytorch scheduler callback
-        # callbacks["scheduler"] = SchedulerCallback(
-        #     reduce_metric=reduce_metric)
-
-        callbacks["saver"] = CheckpointCallback()
-        callbacks["logger"] = Logger()
-        callbacks["tflogger"] = TensorboardLogger()
-
-        return callbacks

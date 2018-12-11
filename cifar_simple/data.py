@@ -14,7 +14,12 @@ class DataSource(AbstractDataSource):
             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
     @staticmethod
-    def prepare_loaders(args, stage=None, **kwargs):
+    def prepare_loaders(
+            *,
+            stage:str = None,
+            n_workers:int = None,
+            batch_size:int = None,
+            **kwargs):
 
         loaders = collections.OrderedDict()
 
@@ -23,16 +28,16 @@ class DataSource(AbstractDataSource):
             download=True,
             transform=DataSource.prepare_transforms(mode="train", stage=stage))
         trainloader = torch.utils.data.DataLoader(
-            trainset, batch_size=args.batch_size,
-            shuffle=True, num_workers=args.workers)
+            trainset, batch_size=batch_size,
+            shuffle=True, num_workers=n_workers)
 
         testset = torchvision.datasets.CIFAR10(
             root='./data', train=False,
             download=True,
             transform=DataSource.prepare_transforms(mode="valid", stage=stage))
         testloader = torch.utils.data.DataLoader(
-            testset, batch_size=args.batch_size,
-            shuffle=False, num_workers=args.workers)
+            testset, batch_size=batch_size,
+            shuffle=False, num_workers=n_workers)
 
         loaders["train"] = trainloader
         loaders["valid"] = testloader

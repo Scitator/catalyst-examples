@@ -23,11 +23,16 @@ args:
 stages:
 
   state_params:
-    main_metric: precision01
+    main_metric: &reduce_metric precision01
     minimize_metric: False
 
   criterion_params:
     criterion: CrossEntropyLoss
+
+  scheduler_params:
+    scheduler: MultiStepLR
+    milestones: [8]
+    gamma: 0.3
 
   data_params:
     in_csv: "./data/ants_bees/dataset.csv"
@@ -39,7 +44,23 @@ stages:
     datapath: "./data/ants_bees/"
 
   callbacks_params:
-    precision_args: [1]
+    loss:
+      callback: LossCallback
+      emb_l2_reg: -1
+    optimizer:
+      callback: OptimizerCallback
+    precision:
+      callback: PrecisionCallback
+      precision_args: [1]
+    scheduler:
+      callback: SchedulerCallback
+      reduce_metric: *reduce_metric
+    saver:
+      callback: CheckpointCallback
+    logger:
+      callback: Logger
+    tflogger:
+      callback: TensorboardLogger
 
   # train head
   stage1:

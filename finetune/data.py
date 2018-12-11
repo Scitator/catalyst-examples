@@ -91,7 +91,10 @@ class DataSource(AbstractDataSource):
 
     @staticmethod
     def prepare_loaders(
-            args, stage=None,
+            *,
+            stage: str = None,
+            n_workers: int = None,
+            batch_size: int = None,
             datapath=None,
             in_csv=None,
             in_csv_train=None, in_csv_valid=None, in_csv_infer=None,
@@ -128,13 +131,13 @@ class DataSource(AbstractDataSource):
                 open_fn=open_fn,
                 dict_transform=DataSource.prepare_transforms(
                     mode="train", stage=stage),
-                dataset_cache_prob=getattr(args, "dataset_cache_prob", -1),
-                batch_size=args.batch_size,
-                workers=args.workers,
+                dataset_cache_prob=-1,
+                batch_size=batch_size,
+                workers=n_workers,
                 shuffle=sampler is None,
                 sampler=sampler)
 
-            print("Train samples", len(train_loader) * args.batch_size)
+            print("Train samples", len(train_loader) * batch_size)
             print("Train batches", len(train_loader))
             loaders["train"] = train_loader
 
@@ -147,12 +150,12 @@ class DataSource(AbstractDataSource):
                 dict_transform=DataSource.prepare_transforms(
                     mode="valid", stage=stage),
                 dataset_cache_prob=-1,
-                batch_size=args.batch_size,
-                workers=args.workers,
+                batch_size=batch_size,
+                workers=n_workers,
                 shuffle=False,
                 sampler=sampler)
 
-            print("Valid samples", len(valid_loader) * args.batch_size)
+            print("Valid samples", len(valid_loader) * batch_size)
             print("Valid batches", len(valid_loader))
             loaders["valid"] = valid_loader
 
@@ -163,12 +166,12 @@ class DataSource(AbstractDataSource):
                 dict_transform=DataSource.prepare_transforms(
                     mode="infer", stage=None),
                 dataset_cache_prob=-1,
-                batch_size=args.batch_size,
-                workers=args.workers,
+                batch_size=batch_size,
+                workers=n_workers,
                 shuffle=False,
                 sampler=None)
 
-            print("Infer samples", len(infer_loader) * args.batch_size)
+            print("Infer samples", len(infer_loader) * batch_size)
             print("Infer batches", len(infer_loader))
             loaders["infer"] = infer_loader
 
