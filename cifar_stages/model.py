@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from catalyst.utils.factory import UtilsFactory
+from catalyst.dl.utils import UtilsFactory
 from catalyst.dl.runner import ClassificationRunner
 
 

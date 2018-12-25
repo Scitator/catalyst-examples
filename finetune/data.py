@@ -11,8 +11,8 @@ from albumentations import (Resize, JpegCompression, Normalize,
     IAAAdditiveGaussianNoise, GaussNoise, MotionBlur, MedianBlur,
     IAASharpen, IAAEmboss, RandomContrast, RandomBrightness, OneOf, Compose)
 
-from catalyst.utils.parse import parse_in_csvs
-from catalyst.utils.factory import UtilsFactory
+from catalyst.legacy.utils.parse import parse_in_csvs
+from catalyst.dl.utils import UtilsFactory
 from catalyst.data.reader import ImageReader, ScalarReader, ReaderCompose
 from catalyst.data.augmentor import Augmentor
 from catalyst.data.sampler import BalanceClassSampler
@@ -92,6 +92,7 @@ class DataSource(AbstractDataSource):
     @staticmethod
     def prepare_loaders(
             *,
+            mode: str,
             stage: str = None,
             n_workers: int = None,
             batch_size: int = None,

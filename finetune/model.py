@@ -1,11 +1,9 @@
-import collections
 import torch
 import torch.nn as nn
-import catalyst.dl.callbacks as callbacks
-from catalyst.utils.factory import UtilsFactory
+from catalyst.dl.callbacks import register_callback, Callback
+from catalyst.dl.utils import UtilsFactory
 from catalyst.dl.runner import AbstractModelRunner
-from catalyst.models.resnet_encoder import ResnetEncoder
-from catalyst.models.sequential import SequentialNet
+from catalyst.contrib.models import ResnetEncoder, SequentialNet
 
 
 # ---- Model ----
@@ -61,7 +59,8 @@ def prepare_logdir(config):
 
 # ---- Callbacks ----
 
-class LossCallback(callbacks.Callback):
+@register_callback
+class LossCallback(Callback):
     def __init__(self, emb_l2_reg=-1):
         self.emb_l2_reg = emb_l2_reg
 
@@ -76,9 +75,6 @@ class LossCallback(callbacks.Callback):
                 torch.norm(embeddings.float(), dim=1)) * self.emb_l2_reg
 
         state.loss = loss
-
-
-callbacks.__dict__["LossCallback"] = LossCallback
 
 
 # ---- Runner ----
