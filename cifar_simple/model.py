@@ -1,7 +1,7 @@
 import torch.nn as nn
 import torch.nn.functional as F
 from catalyst.dl.utils import UtilsFactory
-from catalyst.dl.runner import ClassificationRunner as ModelRunner
+from catalyst.dl.runner import ClassificationRunner as ModelRunner  # noqa: F401, E501
 
 
 class Net(nn.Module):
