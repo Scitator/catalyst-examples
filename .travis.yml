@@ -23,8 +23,8 @@ before_script:
   - flake8 . --count --exit-zero --max-complexity=10 --statistics
   # test to make sure the code is yapf compliant
   - ./yapf.sh --all
-  - PYTHONPATH=. python catalyst/dl/scripts/train.py --config=./cifar_simple/config.yml --logdir=./logs/cifar_simple
-  - PYTHONPATH=. python catalyst/dl/scripts/train.py --config=./cifar_stages/config.yml --logdir=./logs/cifar_stages
+  - rm -rf /tmp/cifar10_data/ && PYTHONPATH=. python catalyst/dl/scripts/train.py --config=./cifar_simple/config.yml --logdir=./logs/cifar_simple
+  - rm -rf /tmp/cifar10_data/ && PYTHONPATH=. python catalyst/dl/scripts/train.py --config=./cifar_stages/config.yml --logdir=./logs/cifar_stages
 script:
   - true  # add other tests here
 notifications:
