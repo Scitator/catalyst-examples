@@ -4,13 +4,15 @@ cache: pip
 matrix:
   include:
     - python: 3.6
+      env: TORCHV=cp36
     - python: 3.7
+      env: TORCHV=cp37
       dist: xenial    # required for Python 3.7 (travis-ci/travis-ci#9069)
       sudo: required  # required for Python 3.7 (travis-ci/travis-ci#9069)
 install:
   # - pip install -r requirements.txt
   - pip install flake8 yapf
-  - pip install https://download.pytorch.org/whl/cpu/torch-1.0.0-cp36-cp36m-linux_x86_64.whl
+  - pip install https://download.pytorch.org/whl/cpu/torch-1.0.0-"${TORCHV}"-"${TORCHV}"m-linux_x86_64.whl
   - pip install torchvision
   - pip install tqdm pyyaml tensorboardX jpeg4py albumentations
   - pip install git+https://github.com/pytorch/tnt.git@master
