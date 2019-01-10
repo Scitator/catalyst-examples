@@ -3,7 +3,7 @@ model_params:
   model: simple     # model from NETWORKS to use
 
 args:
-  workers: 4
+  workers: 1
   model_dir: "cifar_stages"
   logdir: "./logs/cifar_stages"
 
@@ -42,7 +42,7 @@ stages:
   stage1:
 
     args:
-      epochs: 3
+      epochs: 1
       batch_size: 64
 
     optimizer_params:
@@ -54,7 +54,7 @@ stages:
   stage2:
 
     args:
-      epochs: 3
+      epochs: 2
       batch_size: 128
 
     optimizer_params:
