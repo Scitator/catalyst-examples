@@ -1,15 +1,16 @@
 import numpy as np
 import collections
 import cv2
-cv2.setNumThreads(0)
-cv2.ocl.setUseOpenCL(False)
-
 import torch
 from torchvision import transforms
-from albumentations import (Resize, JpegCompression, Normalize,
-    HorizontalFlip, ShiftScaleRotate, CLAHE, Blur, HueSaturationValue,
-    IAAAdditiveGaussianNoise, GaussNoise, MotionBlur, MedianBlur,
-    IAASharpen, IAAEmboss, RandomContrast, RandomBrightness, OneOf, Compose)
+from albumentations import (
+    Resize, JpegCompression, Normalize,
+    HorizontalFlip, ShiftScaleRotate, CLAHE, Blur,
+    HueSaturationValue,
+    IAAAdditiveGaussianNoise, GaussNoise, MotionBlur,
+    MedianBlur,
+    IAASharpen, IAAEmboss, RandomContrast,
+    RandomBrightness, OneOf, Compose)
 
 from catalyst.legacy.utils.parse import parse_in_csvs
 from catalyst.dl.utils import UtilsFactory
@@ -17,6 +18,9 @@ from catalyst.data.reader import ImageReader, ScalarReader, ReaderCompose
 from catalyst.data.augmentor import Augmentor
 from catalyst.data.sampler import BalanceClassSampler
 from catalyst.dl.datasource import AbstractDataSource
+
+cv2.setNumThreads(0)
+cv2.ocl.setUseOpenCL(False)
 
 # ---- Augmentations ----
 

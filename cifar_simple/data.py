@@ -16,11 +16,10 @@ class DataSource(AbstractDataSource):
     @staticmethod
     def prepare_loaders(
             *,
-            stage:str = None,
-            n_workers:int = None,
-            batch_size:int = None,
+            stage: str = None,
+            n_workers: int = None,
+            batch_size: int = None,
             **kwargs):
-
         loaders = collections.OrderedDict()
 
         trainset = torchvision.datasets.CIFAR10(
