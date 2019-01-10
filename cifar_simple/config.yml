@@ -23,7 +23,7 @@ stages:
 
   stage1:
     args:
-      epochs: &train_epoch 10
+      epochs: &train_epoch 3
       batch_size: 64
 
     callbacks_params:

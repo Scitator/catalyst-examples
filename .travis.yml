@@ -10,6 +10,10 @@ matrix:
 install:
   # - pip install -r requirements.txt
   - pip install flake8 yapf
+  - pip install https://download.pytorch.org/whl/cpu/torch-1.0.0-cp36-cp36m-linux_x86_64.whl
+  - pip install torchvision
+  - pip install tensorboardX jpeg4py albumentations
+  - pip install git+https://github.com/pytorch/tnt.git@master
 before_script:
   # stop the build if there are any unexpected flake8 issues
   - flake8 . --count --ignore=E126,E226,E704,E731,W503,W504 --max-complexity=16 --show-source --statistics
@@ -17,6 +21,8 @@ before_script:
   - flake8 . --count --exit-zero --max-complexity=10 --statistics
   # test to make sure the code is yapf compliant
   - ./yapf.sh --all
+  - PYTHONPATH=. python catalyst/dl/scripts/train.py --config=./cifar_simple/config.yml --logdir=./logs/cifar_simple
+  - PYTHONPATH=. python catalyst/dl/scripts/train.py --config=./cifar_stages/config.yml --logdir=./logs/cifar_stages
 script:
   - true  # add other tests here
 notifications:
