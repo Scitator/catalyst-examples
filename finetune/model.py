@@ -96,7 +96,7 @@ class ModelRunner(AbstractModelRunner):
             for param in model_.encoder.parameters():
                 param.requires_grad = True
         else:
-            raise NotImplemented
+            raise NotImplementedError
 
     @staticmethod
     def _batch_handler(*, dct, model):
