@@ -1,13 +1,12 @@
 import torch
 import torch.nn as nn
-from catalyst.dl.callbacks import register_callback, Callback
-from catalyst.dl.utils import UtilsFactory
+from catalyst.dl.callbacks import Callback
 from catalyst.dl.runner import AbstractModelRunner
 from catalyst.contrib.models import ResnetEncoder, SequentialNet
+from catalyst.contrib.registry import Registry
 
 
 # ---- Model ----
-
 
 class ClsNet(nn.Module):
     def __init__(
@@ -30,20 +29,11 @@ class ClsNet(nn.Module):
         return embeddings, logits
 
 
-def build_baseline_model(img_encoder, cls_net):
+@Registry.model
+def baseline(img_encoder, cls_net):
     img_enc = ResnetEncoder(**img_encoder)
     net = ClsNet(enc=img_enc, **cls_net)
     return net
-
-
-NETWORKS = {
-    "baseline": build_baseline_model
-}
-
-
-def prepare_model(config):
-    return UtilsFactory.create_model(
-        config=config, available_networks=NETWORKS)
 
 
 def prepare_logdir(config):
@@ -59,7 +49,7 @@ def prepare_logdir(config):
 
 # ---- Callbacks ----
 
-@register_callback
+@Registry.callback
 class LossCallback(Callback):
     def __init__(self, emb_l2_reg=-1):
         self.emb_l2_reg = emb_l2_reg

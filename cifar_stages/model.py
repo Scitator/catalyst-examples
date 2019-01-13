@@ -1,13 +1,14 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from catalyst.dl.utils import UtilsFactory
 from catalyst.dl.runner import ClassificationRunner
+from catalyst.contrib.registry import Registry
 
 
-class Net(nn.Module):
+@Registry.model
+class simple(nn.Module):
     def __init__(self):
-        super(Net, self).__init__()
+        super().__init__()
         self.conv1 = nn.Conv2d(3, 6, 5)
         self.pool = nn.MaxPool2d(2, 2)
         self.conv2 = nn.Conv2d(6, 16, 5)
@@ -23,21 +24,6 @@ class Net(nn.Module):
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
         return x
-
-
-def build_simple_model():
-    net = Net()
-    return net
-
-
-NETWORKS = {
-    "simple": build_simple_model
-}
-
-
-def prepare_model(config):
-    return UtilsFactory.create_model(
-        config=config, available_networks=NETWORKS)
 
 
 class ModelRunner(ClassificationRunner):

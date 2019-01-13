@@ -1,5 +1,7 @@
 # Catalyst.RL – OpenAI Gym LunarLander example
 
+@TODO: find appropriate hyperparameters for OpenAI Gym Envs
+
 
 1. System requirements – redis
 

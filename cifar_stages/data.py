@@ -16,6 +16,7 @@ class DataSource(AbstractDataSource):
     @staticmethod
     def prepare_loaders(
             *,
+            mode: str,
             stage: str = None,
             n_workers: int = None,
             batch_size: int = None,
