@@ -3,7 +3,7 @@ model_params:
   model: simple     # model from NETWORKS to use
 
 args:
-  workers: 4
+  workers: 1
   model_dir: "cifar_simple"
   logdir: "./logs/cifar_simple"
 
@@ -23,7 +23,7 @@ stages:
 
   stage1:
     args:
-      epochs: &train_epoch 10
+      epochs: &train_epoch 3
       batch_size: 64
 
     callbacks_params:
