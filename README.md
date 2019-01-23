@@ -1,5 +1,7 @@
 # Catalyst examples
 
+**Archived. Moved to [Catalyst](https://github.com/catalyst-team/catalyst)**
+
 Run all examples from this dir.
 
 ---
